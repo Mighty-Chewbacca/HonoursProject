@@ -140,7 +140,7 @@ namespace UnityStandardAssets.Vehicles.Car
             //clamp input values
             steering = Mathf.Clamp(steering, -1, 1);
             AccelInput = accel = Mathf.Clamp(accel, 0, 1);
-            BrakeInput = footbrake = -1*Mathf.Clamp(footbrake, -1, 0);
+            BrakeInput = footbrake = -1*Mathf.Clamp( footbrake, -1, 0);
             handbrake = Mathf.Clamp(handbrake, 0, 1);
 
             //Set the steer on the front wheels.
@@ -224,12 +224,19 @@ namespace UnityStandardAssets.Vehicles.Car
             {
                 if (CurrentSpeed > 5 && Vector3.Angle(transform.forward, m_Rigidbody.velocity) < 50f)
                 {
-                    m_WheelColliders[i].brakeTorque = m_BrakeTorque*footbrake;
+                    m_WheelColliders[i].brakeTorque = m_BrakeTorque * footbrake;
                 }
                 else if (footbrake > 0)
                 {
-                    m_WheelColliders[i].brakeTorque = 0f;
-                    m_WheelColliders[i].motorTorque = -m_ReverseTorque*footbrake;
+                    m_WheelColliders[i].brakeTorque = m_BrakeTorque * footbrake;
+
+                    //removing these lines removes reversing from the simulation
+                    //m_WheelColliders[i].brakeTorque = 0f;
+                    //m_WheelColliders[i].motorTorque = -m_ReverseTorque*footbrake;
+                }
+                else
+                {
+                    m_WheelColliders[i].brakeTorque = m_BrakeTorque * footbrake;
                 }
             }
         }
